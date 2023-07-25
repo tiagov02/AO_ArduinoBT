@@ -4,13 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-@Database(entities = [History::class], version = 3)
+@Database(entities = [History::class], version = 4)
+@TypeConverters(Converters::class)
 abstract class HistoryDatabase : RoomDatabase() {
 
     abstract fun historyDao(): HistoryDAO
@@ -25,6 +27,8 @@ abstract class HistoryDatabase : RoomDatabase() {
         ): HistoryDatabase {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
+
+            val converterInstance = Converters()
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
@@ -34,6 +38,7 @@ abstract class HistoryDatabase : RoomDatabase() {
                     // Wipes and rebuilds instead of migrating if no Migration object.
                     // Migration is not part of this codelab.
                     .fallbackToDestructiveMigration()
+                    .addTypeConverter(converterInstance)
                     .addCallback(HistoryDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
