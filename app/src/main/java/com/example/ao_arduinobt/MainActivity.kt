@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val REQUEST_ENABLE_BT = 1
         private const val SHOW_ALL_REQUEST_CODE = 2
+        private const val SHOW_GRAPHS_REQUEST_CODE = 3
     }
 
     private lateinit var MY_UUID :UUID
@@ -78,6 +79,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.ViewData).setOnClickListener {
             val intent = Intent(this@MainActivity,ShowAllActivity::class.java)
             startActivityForResult(intent, SHOW_ALL_REQUEST_CODE)
+        }
+        findViewById<Button>(R.id.ViewGraphs).setOnClickListener {
+            val intent = Intent(this@MainActivity,DashboardActivity::class.java)
+            startActivityForResult(intent, SHOW_GRAPHS_REQUEST_CODE)
         }
     }
 
