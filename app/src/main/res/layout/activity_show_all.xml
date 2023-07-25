@@ -22,7 +22,8 @@
             android:layout_centerVertical="true"
             android:text="Date"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/textTempTitle"
@@ -31,7 +32,8 @@
             android:layout_centerInParent="true"
             android:text="Temperature"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textAlignment="center"/>
 
         <TextView
             android:id="@+id/textHumidityTitle"
@@ -42,7 +44,8 @@
             android:layout_marginEnd="10dp"
             android:text="Humidity"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textAlignment="center"/>
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
