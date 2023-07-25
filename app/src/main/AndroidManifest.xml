@@ -3,20 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-
-
-    <!-- Needed only if your app makes the device discoverable to Bluetooth devices. -->
-
-    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
-
-
-    <!-- Needed only if your app communicates with already-paired Bluetooth devices. -->
-
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" /> <!-- Needed only if your app makes the device discoverable to Bluetooth devices. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" /> <!-- Needed only if your app communicates with already-paired Bluetooth devices. -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
-
-
-    <!-- Needed only if your app uses Bluetooth scan results to derive physical location. -->
 
     <application
         android:name=".RoomDB.HistoryAplication"
@@ -30,6 +19,11 @@
         tools:targetApi="31">
         <activity android:name=".ShowAllActivity"
             android:exported="false"/>
+        <activity
+            android:name=".DashboardActivity"
+            android:exported="false" >
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">
