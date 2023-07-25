@@ -21,16 +21,14 @@ class ShowAllActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_all)
 
-        val num: MutableList<History> = mutableListOf(History(12f, 12f, LocalDateTime.now()))
-
-        // Adding elements to the list
-        num.add(History(18f, 12f, LocalDateTime.now()))
-
-        //var dataList = listOf(History(12f, 12f))
         val recyclerView = findViewById<RecyclerView>(R.id.recView)
-        val adapter = AllHistoryAdapter(num)
+        val adapter = AllHistoryAdapter()
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        historyViewModel.allHistory.observe( this){ history ->
+            history.let { adapter.submitList(it) }
+        }
     }
 
 }
