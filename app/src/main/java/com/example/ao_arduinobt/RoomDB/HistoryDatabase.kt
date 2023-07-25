@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
-@Database(entities = [History::class], version = 4)
+@Database(entities = [History::class], version = 5)
 @TypeConverters(Converters::class)
 abstract class HistoryDatabase : RoomDatabase() {
 

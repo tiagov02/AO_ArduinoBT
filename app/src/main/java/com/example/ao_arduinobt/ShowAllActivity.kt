@@ -10,6 +10,7 @@ import com.example.ao_arduinobt.RoomDB.History
 import com.example.ao_arduinobt.RoomDB.HistoryAplication
 import com.example.ao_arduinobt.RoomDB.HistoryViewModel
 import com.example.ao_arduinobt.RoomDB.HistoryViewModelFactory
+import java.time.LocalDateTime
 
 class ShowAllActivity : AppCompatActivity() {
 
@@ -20,13 +21,10 @@ class ShowAllActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_all)
 
-        val num: MutableList<History> = mutableListOf(History(12f, 12f))
+        val num: MutableList<History> = mutableListOf(History(12f, 12f, LocalDateTime.now()))
 
         // Adding elements to the list
-        num.add(History(18f, 12f))
-        num.add(History(14f, 15f))
-        num.add(History(22f, 17f))
-        num.add(History(32f, 11f))
+        num.add(History(18f, 12f, LocalDateTime.now()))
 
         //var dataList = listOf(History(12f, 12f))
         val recyclerView = findViewById<RecyclerView>(R.id.recView)

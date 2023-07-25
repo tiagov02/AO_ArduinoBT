@@ -2,9 +2,11 @@ package com.example.ao_arduinobt
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.bluetooth.*
 import android.bluetooth.le.ScanResult
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +27,7 @@ import java.io.InputStream
 import java.util.*
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.time.LocalDateTime
 
 class MainActivity : AppCompatActivity() {
     companion object {
@@ -56,35 +59,51 @@ class MainActivity : AppCompatActivity() {
 
         if (bluetoothAdapter == null) {
             //super.onDestroy();
-            println("NULL" +
-                    "")
+            //The Bluetooth function do not exists in device
+            return
         }
 
         if (bluetoothAdapter?.isEnabled == false) {
-           checkPermissions()
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         }
         else{
-            findViewById<Button>(R.id.seachDevices).setOnClickListener {
-                val btDevices = findViewById<TextView>(R.id.btDevices)
-                val btConn = findViewById<Button>(R.id.connectToDevice)
-                btDevices.text = ""
-                val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
-                //verifica e pesquisa dispositivos
-                pairedDevices?.forEach { device ->
-                    val deviceName = device.name
-                    val deviceHardwareAddress = device.address
-                    println("Entrei aqui")
+            searchDevicesAndConnect()
+        }
+    }
 
-                    btDevices.text = btDevices.text.toString() + "\n" + deviceName + " || " + deviceHardwareAddress
-                }
-                btConn.isEnabled = true
-                btConn.setOnClickListener {
-                    connectToHC06()
-                }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == REQUEST_ENABLE_BT){
+            if(resultCode == Activity.RESULT_OK){
+                searchDevicesAndConnect()
             }
         }
     }
 
+
+
+    @SuppressLint("MissingPermission")
+    fun searchDevicesAndConnect(){
+        findViewById<Button>(R.id.seachDevices).setOnClickListener {
+            val btDevices = findViewById<TextView>(R.id.btDevices)
+            val btConn = findViewById<Button>(R.id.connectToDevice)
+            btDevices.text = ""
+            val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
+            //verifica e pesquisa dispositivos
+            pairedDevices?.forEach { device ->
+                val deviceName = device.name
+                val deviceHardwareAddress = device.address
+                println("Entrei aqui")
+
+                btDevices.text = btDevices.text.toString() + "\n" + deviceName + " || " + deviceHardwareAddress
+            }
+            btConn.isEnabled = true
+            btConn.setOnClickListener {
+                connectToHC06()
+            }
+        }
+    }
     fun checkPermissions(){
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -157,6 +176,6 @@ class MainActivity : AppCompatActivity() {
 
 
         //TODO: Ver DateTime
-        historyViewModel.insert(History(temperature.toFloat(),humidity.toFloat()))
+        historyViewModel.insert(History(temperature.toFloat(),humidity.toFloat(), LocalDateTime.now()))
     }
 }
