@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.bluetooth.*
 import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.icu.lang.UProperty.NAME
@@ -14,6 +15,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -34,22 +36,26 @@ class MainActivity : AppCompatActivity() {
     private val MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
     private var connected = false
     private lateinit var bluetoothSocket: BluetoothSocket
-    val bluetoothManager: BluetoothManager = getSystemService(BluetoothManager::class.java)
-    val bluetoothAdapter: BluetoothAdapter? = bluetoothManager.getAdapter()
+    private lateinit var bluetoothManager: BluetoothManager
+    var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var inputStream: InputStream
 
 
 
-    private fun <T> removeItems(list: MutableList<T>, predicate: Predicate<T>) {
+    /*private fun <T> removeItems(list: MutableList<T>, predicate: Predicate<T>) {
         val newList: MutableList<T> = ArrayList()
         list.filter { predicate.test(it) }.forEach { newList.add(it) }
         list.removeAll(newList)
-    }
+    }*/
 
+    @SuppressLint("MissingPermission")
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        bluetoothAdapter = bluetoothManager.adapter
 
         if (bluetoothAdapter == null) {
             //super.onDestroy();
@@ -63,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         else{
             findViewById<Button>(R.id.seachDevices).setOnClickListener {
                 val btDevices = findViewById<TextView>(R.id.btDevices)
+                val btConn = findViewById<Button>(R.id.connectToDevice)
                 btDevices.text = ""
                 val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
                 //verifica e pesquisa dispositivos
@@ -73,38 +80,9 @@ class MainActivity : AppCompatActivity() {
 
                     btDevices.text = btDevices.text.toString() + "\n" + deviceName + " || " + deviceHardwareAddress
                 }
-
-                val scanCallback = object : ScanCallback() {
-                    override fun onScanResult(callbackType: Int, result: ScanResult?) {
-                        super.onScanResult(callbackType, result)
-                        if (result != null && ContextCompat.checkSelfPermission(
-                                applicationContext,
-                                Manifest.permission.BLUETOOTH
-                            ) == PackageManager.PERMISSION_GRANTED
-                        ) {
-                            val indexQuery =
-                                scanResults.indexOfFirst { it.device.address == result.device.address }
-                            if (indexQuery != -1) {
-                                scanResults[indexQuery] = result
-                            } else {
-                                scanResults.add(result)
-                                scanResults.sortByDescending { it.rssi }
-                                val predicate = Predicate { x: ScanResult -> x.device.name == null }
-                                removeItems(scanResults, predicate)
-                            }
-                        }
-                    }
-
-                    override fun onScanFailed(errorCode: Int) {
-                        super.onScanFailed(errorCode)
-                        Log.e("ScanCallback", "onScanFailed: code $errorCode")
-                    }
-                }
-                scanResults.forEach { result ->
-                    btDevices.text = btDevices.text.toString() + "\n" + result.device.name + " || " + result.device.address
-                }
-                findViewById<Button>(R.id.connectToDevice).setOnClickListener {
-
+                btConn.isEnabled = true
+                btConn.setOnClickListener {
+                    connectToHC06()
                 }
             }
         }
@@ -135,13 +113,15 @@ class MainActivity : AppCompatActivity() {
                     inputStream = bluetoothSocket.inputStream
                     startReceivingData()
                 } catch (e: IOException) {
-                    Log.e("BT-ERROR", "Erro ao conectar ao dispositivo: ${e.message}")
+                    Log.e("BT-ERROR", "Error in connecting Device: ${e.message}")
+                    Toast.makeText(this,"Error in connecting Device: ${e.message}",Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Log.e("BT-ERROR", "Dispositivo HC-06 não encontrado nos dispositivos emparelhados.")
+                Log.e("BT-ERROR", "Device HC-06 not founded in paired devices please pair them!")
+                Toast.makeText(this,"Device HC-06 not founded in paired devices please pair them!",Toast.LENGTH_SHORT).show()
             }
         } else {
-            // Se já estiver conectado, inicie a recepção de dados
+            // If Connected Receive Data
             startReceivingData()
         }
     }
