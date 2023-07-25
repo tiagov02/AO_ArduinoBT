@@ -45,13 +45,6 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-
-    /*private fun <T> removeItems(list: MutableList<T>, predicate: Predicate<T>) {
-        val newList: MutableList<T> = ArrayList()
-        list.filter { predicate.test(it) }.forEach { newList.add(it) }
-        list.removeAll(newList)
-    }*/
-
     @SuppressLint("MissingPermission")
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
