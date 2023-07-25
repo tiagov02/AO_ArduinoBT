@@ -2,13 +2,11 @@ package com.example.ao_arduinobt
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-/*
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
-import com.jjoe64.graphview.series.LineGraphSeries*/
+import com.jjoe64.graphview.series.LineGraphSeries
 
 class DashboardActivity : AppCompatActivity() {
-/*
     lateinit var lineGraphView: GraphView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,5 +55,5 @@ class DashboardActivity : AppCompatActivity() {
         // data series to our graph view.
         lineGraphView.addSeries(series)
 
-    }*/
+    }
 }
