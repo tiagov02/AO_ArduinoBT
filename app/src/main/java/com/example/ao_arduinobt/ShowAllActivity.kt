@@ -6,11 +6,9 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.ao_arduinobt.RoomDB.History
 import com.example.ao_arduinobt.RoomDB.HistoryAplication
 import com.example.ao_arduinobt.RoomDB.HistoryViewModel
 import com.example.ao_arduinobt.RoomDB.HistoryViewModelFactory
-import java.time.LocalDateTime
 
 class ShowAllActivity : AppCompatActivity() {
 
