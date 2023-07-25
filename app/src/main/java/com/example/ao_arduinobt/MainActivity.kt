@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var inputStream: InputStream
 
-    private val RoomRequestCode = 1
 
     private val historyViewModel: HistoryViewModel by viewModels {
         HistoryViewModelFactory((application as HistoryAplication).repository)
