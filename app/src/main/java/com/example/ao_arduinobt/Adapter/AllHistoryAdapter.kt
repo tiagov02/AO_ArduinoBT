@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ao_arduinobt.R
 import com.example.ao_arduinobt.RoomDB.History
+import java.time.format.DateTimeFormatter
 
 class AllHistoryAdapter() : ListAdapter<History, AllHistoryAdapter.AllHistoryViewHolder>(WORDS_COMPARATOR) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllHistoryViewHolder {
@@ -26,7 +27,7 @@ class AllHistoryAdapter() : ListAdapter<History, AllHistoryAdapter.AllHistoryVie
         val textView3: TextView = itemView.findViewById(R.id.textHumidity)
 
         fun bind(elem: History) {
-            textView1.text = elem.date_time_measure.toString()
+            textView1.text = elem.date_time_measure.format(DateTimeFormatter.ofPattern("yyyy/MM/dd \nHH:mm:ss"))
             textView2.text = elem.temperature.toString()
             textView3.text = elem.humidity.toString()
         }
