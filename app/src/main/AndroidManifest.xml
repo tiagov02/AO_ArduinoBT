@@ -28,6 +28,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AO_ArduinoBT"
         tools:targetApi="31">
+        <activity android:name=".ShowAllActivity"
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
