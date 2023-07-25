@@ -65,7 +65,8 @@ class MainActivity : AppCompatActivity() {
         if (bluetoothAdapter == null) {
             //super.onDestroy();
             //The Bluetooth function do not exists in device
-            return
+            Toast.makeText(this,"The device doen't have bluetooth", Toast.LENGTH_LONG).show()
+            super.onDestroy()
         }
 
         if (bluetoothAdapter?.isEnabled == false) {
