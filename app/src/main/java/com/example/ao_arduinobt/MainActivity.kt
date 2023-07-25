@@ -3,12 +3,9 @@ package com.example.ao_arduinobt
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.*
-import android.bluetooth.le.ScanCallback
 import android.bluetooth.le.ScanResult
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
-import android.icu.lang.UProperty.NAME
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -16,15 +13,16 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.util.Predicate
-import org.w3c.dom.Text
+import com.example.ao_arduinobt.RoomDB.History
+import com.example.ao_arduinobt.RoomDB.HistoryAplication
+import com.example.ao_arduinobt.RoomDB.HistoryViewModel
+import com.example.ao_arduinobt.RoomDB.HistoryViewModelFactory
 import java.io.IOException
 import java.io.InputStream
 import java.util.*
-import kotlin.collections.ArrayList
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -32,13 +30,19 @@ class MainActivity : AppCompatActivity() {
     companion object {
         private const val REQUEST_ENABLE_BT = 1
     }
-    private val scanResults = mutableListOf<ScanResult>()
+
     private val MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
     private var connected = false
     private lateinit var bluetoothSocket: BluetoothSocket
     private lateinit var bluetoothManager: BluetoothManager
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var inputStream: InputStream
+
+    private val RoomRequestCode = 1
+
+    private val historyViewModel: HistoryViewModel by viewModels {
+        HistoryViewModelFactory((application as HistoryAplication).repository)
+    }
 
 
 
@@ -153,5 +157,13 @@ class MainActivity : AppCompatActivity() {
     fun handleData(data: ByteArray){
         val receivedString = String(data, charset("UTF-8"))
         Log.d("TAG", "Dados recebidos: $receivedString")
+        val spl = receivedString.split(";")
+
+        val temperature = spl[0]
+        val humidity = spl[1]
+
+
+        //TODO: Ver DateTime
+        historyViewModel.insert(History(temperature.toFloat(),humidity.toFloat()))
     }
 }

@@ -19,6 +19,7 @@
     <!-- Needed only if your app uses Bluetooth scan results to derive physical location. -->
 
     <application
+        android:name=".RoomDB.HistoryAplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
