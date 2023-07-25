@@ -27,7 +27,7 @@ class AllHistoryAdapter() : ListAdapter<History, AllHistoryAdapter.AllHistoryVie
         val textView3: TextView = itemView.findViewById(R.id.textHumidity)
 
         fun bind(elem: History) {
-            textView1.text = elem.date_time_measure.format(DateTimeFormatter.ofPattern("yyyy/MM/dd \nHH:mm:ss"))
+            textView1.text = elem.date_time_measure.format(DateTimeFormatter.ofPattern("dd/MM/yyyy \nHH:mm:ss"))
             textView2.text = elem.temperature.toString()
             textView3.text = elem.humidity.toString()
         }

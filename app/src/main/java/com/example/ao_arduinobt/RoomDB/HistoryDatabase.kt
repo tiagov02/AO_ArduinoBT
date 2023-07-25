@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
 import kotlinx.coroutines.CoroutineScope
 
-@Database(entities = [History::class], version = 5)
+@Database(entities = [History::class], version = 6)
 @TypeConverters(TimeConverter::class)
 abstract class HistoryDatabase : RoomDatabase() {
 
