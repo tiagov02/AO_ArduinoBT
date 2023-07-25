@@ -1,3 +1,5 @@
+package com.example.ao_arduinobt.Adapter
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -6,8 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ao_arduinobt.R
 import com.example.ao_arduinobt.RoomDB.History
 
-class CustomAdapter(private val dataList: List<History>) :
-    RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
+class AllHistoryAdapter(private val dataList: List<History>) :
+    RecyclerView.Adapter<AllHistoryAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView1: TextView = itemView.findViewById(R.id.textDate)
