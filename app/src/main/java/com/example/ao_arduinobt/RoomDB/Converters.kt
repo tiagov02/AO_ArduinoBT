@@ -1,8 +1,10 @@
 package com.example.ao_arduinobt.RoomDB
 
+import androidx.room.ProvidedTypeConverter
 import androidx.room.TypeConverter
 import java.time.LocalDateTime
 
+@ProvidedTypeConverter
 class Converters {
     @TypeConverter
     fun fromTimestamp(value: String?): LocalDateTime? {

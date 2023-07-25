@@ -32,9 +32,10 @@ import java.time.LocalDateTime
 class MainActivity : AppCompatActivity() {
     companion object {
         private const val REQUEST_ENABLE_BT = 1
+        private const val SHOW_ALL_REQUEST_CODE = 2
     }
 
-    private val MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+    private lateinit var MY_UUID :UUID
     private var connected = false
     private lateinit var bluetoothSocket: BluetoothSocket
     private lateinit var bluetoothManager: BluetoothManager
@@ -55,6 +56,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         checkPermissions()
 
+        MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+
         bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
         bluetoothAdapter = bluetoothManager.adapter
 
@@ -70,6 +73,11 @@ class MainActivity : AppCompatActivity() {
         }
         else{
             searchDevicesAndConnect()
+        }
+
+        findViewById<Button>(R.id.ViewData).setOnClickListener {
+            val intent = Intent(this@MainActivity,ShowAllActivity::class.java)
+            startActivityForResult(intent, SHOW_ALL_REQUEST_CODE)
         }
     }
 
