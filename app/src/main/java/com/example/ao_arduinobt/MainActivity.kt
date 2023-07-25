@@ -40,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bluetoothManager: BluetoothManager
     var bluetoothAdapter: BluetoothAdapter? = null
     private lateinit var inputStream: InputStream
+    private var targetDevice: BluetoothDevice? = null
 
 
     private val historyViewModel: HistoryViewModel by viewModels {
@@ -81,7 +82,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
+    override fun onResume() {
+        super.onResume()
+    }
 
     @SuppressLint("MissingPermission")
     fun searchDevicesAndConnect(){
@@ -104,6 +107,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     fun checkPermissions(){
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -120,10 +124,10 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     private fun connectToHC06() {
         if (!connected) {
-            val targetDevice = bluetoothAdapter!!.bondedDevices.find { it.name == "HC-06" }
+            targetDevice = bluetoothAdapter!!.bondedDevices.find { it.name == "HC-06" }
             if (targetDevice != null) {
                 try {
-                    bluetoothSocket = targetDevice.createRfcommSocketToServiceRecord(MY_UUID)
+                    bluetoothSocket = targetDevice!!.createRfcommSocketToServiceRecord(MY_UUID)
                     bluetoothSocket.connect()
                     connected = true
                     inputStream = bluetoothSocket.inputStream
@@ -175,7 +179,6 @@ class MainActivity : AppCompatActivity() {
         val humidity = spl[1]
 
 
-        //TODO: Ver DateTime
         historyViewModel.insert(History(temperature.toFloat(),humidity.toFloat(), LocalDateTime.now()))
     }
 }
