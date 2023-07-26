@@ -96,10 +96,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     @SuppressLint("MissingPermission")
     fun searchDevicesAndConnect(){
         findViewById<Button>(R.id.seachDevices).setOnClickListener {
