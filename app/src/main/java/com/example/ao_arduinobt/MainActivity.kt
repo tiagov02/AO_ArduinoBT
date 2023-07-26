@@ -163,14 +163,20 @@ class MainActivity : AppCompatActivity() {
     private fun startReceivingData() {
         Observable.create<ByteArray> { emitter ->
             val buffer = ByteArray(1024)
+            var hasDataStarted = false
             try {
                 while (connected) {
                     val bytesRead = inputStream.read(buffer)
                     if (bytesRead == -1) {
                         break
                     }
-                    val data = buffer.copyOf(bytesRead)
-                    emitter.onNext(data)
+                    if (!hasDataStarted && buffer[0].toChar() == '@') {
+                        hasDataStarted = true
+                    }
+                    if (hasDataStarted) {
+                        val data = buffer.copyOf(bytesRead)
+                        emitter.onNext(data)
+                    }
                 }
                 emitter.onComplete()
             } catch (e: IOException) {
@@ -193,7 +199,16 @@ class MainActivity : AppCompatActivity() {
         val receivedString = String(data, charset("UTF-8"))
         Log.d("TAG", "Dados recebidos: $receivedString")
 
-        receivedString.split("\n").forEach{string ->
+        if (receivedString.contains("@")){
+            val sanitizedString = if (receivedString.isNotBlank()) receivedString.substring(1) else ""
+            sendDataToDB(sanitizedString)
+        }else{
+            sendDataToDB(receivedString)
+        }
+    }
+
+    fun sendDataToDB(data: String){
+        data.split("\n").forEach{string ->
             if(string.isNotBlank()){
                 val spl_individual = string.split(";")
 
