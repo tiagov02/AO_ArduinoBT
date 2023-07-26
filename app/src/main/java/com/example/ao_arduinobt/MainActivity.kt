@@ -152,6 +152,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             // If Connected Receive Data
+            Toast.makeText(this,"Sucessfully connected! Receiving Data!!",Toast.LENGTH_SHORT).show()
             startReceivingData()
         }
     }
