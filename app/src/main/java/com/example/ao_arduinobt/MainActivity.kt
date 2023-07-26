@@ -174,25 +174,36 @@ class MainActivity : AppCompatActivity() {
                 }
                 emitter.onComplete()
             } catch (e: IOException) {
-                emitter.onError(e)
+                println(e)
             }
         }
+            .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
-            .subscribe { data ->
+            .subscribe ({ data ->
                 handleData(data)
-            }
+            },
+                {
+                    error ->
+                    Log.e("ERRO-BT",error.message.toString())
+                })
     }
 
     //This function will pass the data to a Room Database
     fun handleData(data: ByteArray){
         val receivedString = String(data, charset("UTF-8"))
         Log.d("TAG", "Dados recebidos: $receivedString")
-        val spl = receivedString.split(";")
 
-        val temperature = spl[0]
-        val humidity = spl[1]
+        receivedString.split("\n").forEach{string ->
+            if(string.isNotBlank()){
+                val spl_individual = string.split(";")
 
+                if(spl_individual.size >= 2){
+                    val temperature = spl_individual[0].toFloat()
+                    val humidity = spl_individual[1].toFloat()
 
-        historyViewModel.insert(History(temperature.toFloat(),humidity.toFloat(), LocalDateTime.now()))
+                    historyViewModel.insert(History(temperature,humidity, LocalDateTime.now()))
+                }
+            }
+        }
     }
 }
