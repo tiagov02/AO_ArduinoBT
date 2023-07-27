@@ -96,10 +96,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     @SuppressLint("MissingPermission")
     fun searchDevicesAndConnect(){
         findViewById<Button>(R.id.seachDevices).setOnClickListener {
@@ -156,6 +152,7 @@ class MainActivity : AppCompatActivity() {
             }
         } else {
             // If Connected Receive Data
+            Toast.makeText(this,"Sucessfully connected! Receiving Data!!",Toast.LENGTH_SHORT).show()
             startReceivingData()
         }
     }
