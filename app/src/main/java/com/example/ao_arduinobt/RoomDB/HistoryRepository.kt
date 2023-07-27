@@ -17,4 +17,7 @@ class HistoryRepository(private val historyDAO: HistoryDAO) {
     suspend fun insert(history: History) {
         historyDAO.insert(history)
     }
+    fun getHistories():Flow<List<History>> {
+        return this.history
+    }
 }

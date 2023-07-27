@@ -15,6 +15,10 @@ class DashboardActivity : AppCompatActivity() {
 
         lineGraphView = findViewById(R.id.idGraphView)
 
+        val historyViewModel: His
+
+        val history =
+
         // on below line we are adding data to our graph view.
         val series: LineGraphSeries<DataPoint> = LineGraphSeries(
             arrayOf(

@@ -57,6 +57,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         checkPermissions()
 
+        historyViewModel.insert(History( 12.0f, 0.11f , LocalDateTime.now()))
+        historyViewModel.insert(History(24.0f, 0.88f , LocalDateTime.now()))
+        historyViewModel.insert(History(35.0f, 0.18f , LocalDateTime.now()))
+
+
         MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
 
         bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
