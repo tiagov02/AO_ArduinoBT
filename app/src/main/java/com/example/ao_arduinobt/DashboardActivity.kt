@@ -16,6 +16,10 @@ class DashboardActivity : AppCompatActivity() {
     lateinit var lineGraphView: GraphView
     lateinit var lineGraphView1: GraphView
 
+    val historyViewModel: HistoryViewModel by viewModels {
+        HistoryViewModelFactory((application as HistoryAplication).repository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -23,25 +27,7 @@ class DashboardActivity : AppCompatActivity() {
 
         lineGraphView = findViewById(R.id.idGraphView)
 
-
-        val historyViewModel: HistoryViewModel by viewModels {
-            HistoryViewModelFactory((application as HistoryAplication).repository)
-        }
-
-        val series: LineGraphSeries<DataPoint> = LineGraphSeries()
-
-        val history = historyViewModel.allHistory.observe(this) { history ->
-            history.let { data ->
-                data.forEach { dt ->
-                    series.appendData(
-                        DataPoint(
-                            dt.date_time_measure.toEpochSecond(ZoneOffset.UTC).toDouble(),
-                            dt.temperature.toDouble()
-                        ), true, 1
-                    )
-                }
-            }
-        }
+        val series: LineGraphSeries<DataPoint> = LineGraphSeries(retrievefromDB())
 
         // on below line we are adding data to our graph view.
 
@@ -112,5 +98,17 @@ class DashboardActivity : AppCompatActivity() {
         // data series to our graph view.
         lineGraphView1.addSeries(series1)
 
+    }
+
+    fun retrievefromDB(): Array<DataPoint> {
+        val dataPoints = mutableListOf<DataPoint>()
+        historyViewModel.allHistory.observe(this) { history ->
+            history.let { data ->
+                data.forEach { dt ->
+                    dataPoints.add(DataPoint(dt.date_time_measure.toEpochSecond(ZoneOffset.UTC).toDouble(),dt.temperature.toDouble()))
+                }
+            }
+        }
+        return dataPoints.toTypedArray()
     }
 }
