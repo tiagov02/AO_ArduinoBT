@@ -43,8 +43,6 @@ class DashboardActivity : AppCompatActivity() {
             }
         }
 
-        Log.d("DEBUG", history.toString())
-
         // on below line we are adding data to our graph view.
 
 
@@ -112,7 +110,7 @@ class DashboardActivity : AppCompatActivity() {
 
         // on below line we are adding
         // data series to our graph view.
-        lineGraphView1.addSeries(series)
+        lineGraphView1.addSeries(series1)
 
     }
 }
