@@ -102,7 +102,7 @@ class DashboardActivity : AppCompatActivity() {
 
     fun retrievefromDB(): Array<DataPoint> {
         val dataPoints = mutableListOf<DataPoint>()
-        historyViewModel.allHistory.observe(this) { history ->
+        historyViewModel.historyAsc.observe(this) { history ->
             history.let { data ->
                 data.forEach { dt ->
                     dataPoints.add(DataPoint(dt.date_time_measure.toEpochSecond(ZoneOffset.UTC).toDouble(),dt.temperature.toDouble()))

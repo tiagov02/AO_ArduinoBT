@@ -8,6 +8,7 @@ class HistoryRepository(private val historyDAO: HistoryDAO) {
     // Room executes all queries on a separate thread.
     // Observed Flow will notify the observer when the data has changed.
     val history: Flow<List<History>> = historyDAO.getHistoryOrdered()
+    val historyAsc : Flow<List<History>> = historyDAO.getHistoryAsc()
 
     // By default Room runs suspend queries off the main thread, therefore, we don't need to
     // implement anything else to ensure we're not doing long running database work
@@ -17,7 +18,5 @@ class HistoryRepository(private val historyDAO: HistoryDAO) {
     suspend fun insert(history: History) {
         historyDAO.insert(history)
     }
-    fun getHistories():Flow<List<History>> {
-        return this.history
-    }
+
 }

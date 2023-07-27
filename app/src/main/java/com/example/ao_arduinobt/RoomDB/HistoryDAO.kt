@@ -12,6 +12,9 @@ interface HistoryDAO {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(history: History)
 
-    @Query("SELECT * FROM history ORDER BY date_time_measure ASC")
+    @Query("SELECT * FROM history ORDER BY date_time_measure DESC")
     fun getHistoryOrdered(): Flow<List<History>>
+
+    @Query("SELECT * FROM history ORDER BY date_time_measure ASC")
+    fun getHistoryAsc(): Flow<List<History>>
 }
