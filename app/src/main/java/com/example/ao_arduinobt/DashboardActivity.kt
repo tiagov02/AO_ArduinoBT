@@ -27,6 +27,8 @@ class DashboardActivity : AppCompatActivity() {
         HistoryViewModelFactory((application as HistoryAplication).repository)
     }
 
+    private val dataPointsTemp = mutableListOf<DataPoint>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
@@ -45,36 +47,33 @@ class DashboardActivity : AppCompatActivity() {
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
         historyViewModel.historyPerDay.observe(this) { history ->
             history?.let { data ->
-                val dataPoints = mutableListOf<DataPoint>()
-
                 data.forEach { dt ->
-                    dataPoints.add(
+                    dataPointsTemp.add(
                         DataPoint(
                             dateFormatter.parse(dt.date),
                             dt.avgTemperature.toDouble()
                         )
                     )
                 }
-
-                updateGraph(dataPoints)
+                updateGraphPerDay()
             }
         }
     }
 
-    private fun updateGraph(dataPoints: List<DataPoint>) {
+    private fun updateGraphPerDay() {
 
-        val series: LineGraphSeries<DataPoint> = LineGraphSeries(dataPoints.toTypedArray())
+        val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTemp.toTypedArray())
         lineGraphView.animate()
 
         lineGraphView.viewport.isScalable = true;
 
         lineGraphView.viewport.isScrollable = true;
 
-        series.color = R.color.purple_200
-        series.setDrawDataPoints(true)
-        lineGraphView.addSeries(series)
+        seriesTemp.color = R.color.purple_200
+        seriesTemp.setDrawDataPoints(true)
+        lineGraphView.addSeries(seriesTemp)
 
-        Log.d("Points:", dataPoints.toString())
+        Log.d("Points:", dataPointsTemp.toString())
     }
 
 
@@ -93,12 +92,12 @@ class DashboardActivity : AppCompatActivity() {
                     )
                 }
 
-                updateGraphHumidity(dataPoints)
+                //updateGraphHumidity(dataPoints)
             }
         }
     }
 
-    private fun updateGraphHumidity(dataPoints: List<DataPoint>) {
+    /*private fun updateGraphHumidity(dataPoints: List<DataPoint>) {
 
         val series: LineGraphSeries<DataPoint> = LineGraphSeries(dataPoints.toTypedArray())
 
@@ -112,7 +111,7 @@ class DashboardActivity : AppCompatActivity() {
         lineGraphView1.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(this)
 
         Log.d("Points:", dataPoints.toString())
-    }
+    }*/
 
 
 }
