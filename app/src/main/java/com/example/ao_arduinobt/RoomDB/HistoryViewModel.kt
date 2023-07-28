@@ -10,8 +10,8 @@ class HistoryViewModel(private val repository: HistoryRepository) : ViewModel() 
     //   the UI when the data actually changes.
     // - Repository is completely separated from the UI through the ViewModel.
     val allHistory: LiveData<List<History>> = repository.history.asLiveData()
-    val historyAsc: LiveData<List<History>> = repository.historyAsc.asLiveData()
     val historyPerDay: LiveData<List<DailyHistory>> = repository.historyPerDay.asLiveData()
+    val historyPerHour: LiveData<List<HourlyHistory>> = repository.historyPerHour.asLiveData()
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way
