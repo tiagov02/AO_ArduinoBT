@@ -17,4 +17,7 @@ interface HistoryDAO {
 
     @Query("SELECT * FROM history ORDER BY date_time_measure ASC")
     fun getHistoryAsc(): Flow<List<History>>
+
+    @Query("SELECT DATE(date_time_measure) AS date, AVG(temperature) AS avg_temperature, AVG(humidity) AS avg_humidity FROM history GROUP BY DATE(date_time_measure)")
+    fun getAverageHistoryPerDay(): Flow<List<DailyHistory>>
 }

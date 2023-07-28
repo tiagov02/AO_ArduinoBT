@@ -136,7 +136,8 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("MissingPermission")
     private fun connectToHC06() {
         if (!connected) {
-            targetDevice = bluetoothAdapter!!.bondedDevices.find { it.name == "HC-06" }
+            targetDevice = bluetoothAdapter!!.bondedDevices.find { it.name == "HC-06"}
+            Log.d("BT/DEVICE MAC", targetDevice.hashCode().toString())
             if (targetDevice != null) {
                 try {
                     bluetoothSocket = targetDevice!!.createRfcommSocketToServiceRecord(MY_UUID)
