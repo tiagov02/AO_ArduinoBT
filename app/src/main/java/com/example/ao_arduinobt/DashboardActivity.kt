@@ -63,6 +63,9 @@ class DashboardActivity : AppCompatActivity() {
         val series: LineGraphSeries<DataPoint> = LineGraphSeries(dataPoints.toTypedArray())
         lineGraphView.animate()
 
+        lineGraphView.viewport.isScalable = true;
+
+        lineGraphView.viewport.isScrollable = true;
 
         series.color = R.color.purple_200
         series.setDrawDataPoints(true)
@@ -96,7 +99,9 @@ class DashboardActivity : AppCompatActivity() {
         val series: LineGraphSeries<DataPoint> = LineGraphSeries(dataPoints.toTypedArray())
 
         lineGraphView1.animate()
+        lineGraphView1.viewport.isScalable = true;
 
+        lineGraphView1.viewport.isScrollable = true;
         series.color = R.color.purple_200
         series.isDrawDataPoints = true
         lineGraphView1.addSeries(series)
