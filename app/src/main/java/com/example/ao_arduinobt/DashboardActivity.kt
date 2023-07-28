@@ -77,9 +77,9 @@ class DashboardActivity : AppCompatActivity() {
         val dtFormatter = SimpleDateFormat("dd/MM/yyyy")
         lineGraphView.animate()
 
-        lineGraphView.viewport.isScalable = true;
+        lineGraphView.viewport.isScalable = true
 
-        lineGraphView.viewport.isScrollable = true;
+        lineGraphView.viewport.isScrollable = true
 
         seriesTemp.color = R.color.purple_200
         seriesTemp.setDrawDataPoints(true)
