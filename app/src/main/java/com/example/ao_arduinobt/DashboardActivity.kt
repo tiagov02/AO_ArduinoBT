@@ -9,6 +9,7 @@ import com.example.ao_arduinobt.RoomDB.HistoryAplication
 import com.example.ao_arduinobt.RoomDB.HistoryViewModel
 import com.example.ao_arduinobt.RoomDB.HistoryViewModelFactory
 import com.jjoe64.graphview.GraphView
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.coroutines.Dispatchers
@@ -108,6 +109,7 @@ class DashboardActivity : AppCompatActivity() {
         series.color = R.color.purple_200
         series.isDrawDataPoints = true
         lineGraphView1.addSeries(series)
+        lineGraphView1.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(this)
 
         Log.d("Points:", dataPoints.toString())
     }
