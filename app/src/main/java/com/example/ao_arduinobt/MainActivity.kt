@@ -49,13 +49,14 @@ class MainActivity : AppCompatActivity() {
         HistoryViewModelFactory((application as HistoryAplication).repository)
     }
 
-
     @SuppressLint("MissingPermission")
     @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         checkPermissions()
+
+        //historyViewModel.insert(History(19f,0.5f, LocalDateTime.now()))
 
         MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
 

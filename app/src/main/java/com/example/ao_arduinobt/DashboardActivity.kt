@@ -4,12 +4,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.ao_arduinobt.RoomDB.HistoryAplication
 import com.example.ao_arduinobt.RoomDB.HistoryViewModel
 import com.example.ao_arduinobt.RoomDB.HistoryViewModelFactory
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.ZoneOffset
 
 class DashboardActivity : AppCompatActivity() {
@@ -26,89 +31,78 @@ class DashboardActivity : AppCompatActivity() {
         setContentView(R.layout.activity_dashboard)
 
         lineGraphView = findViewById(R.id.idGraphView)
-
-        val series: LineGraphSeries<DataPoint> = LineGraphSeries(retrievefromDB())
-
-        // on below line we are adding data to our graph view.
+        lineGraphView1 = findViewById(R.id.idGraphView2)
 
 
-        // on below line adding animation
+        retrievefromDB()
+        retrievefromDBH()
+    }
+
+
+    fun retrievefromDB() {
+        historyViewModel.historyAsc.observe(this, { history ->
+            history?.let { data ->
+                val dataPoints = mutableListOf<DataPoint>()
+
+                data.forEach { dt ->
+                    dataPoints.add(
+                        DataPoint(
+                            dt.date_time_measure.toEpochSecond(ZoneOffset.UTC).toDouble(),
+                            dt.temperature.toDouble()
+                        )
+                    )
+                }
+
+                updateGraph(dataPoints)
+            }
+        })
+    }
+
+    private fun updateGraph(dataPoints: List<DataPoint>) {
+
+        val series: LineGraphSeries<DataPoint> = LineGraphSeries(dataPoints.toTypedArray())
         lineGraphView.animate()
 
-        // on below line we are setting scrollable
-        // for point graph view
-        lineGraphView.viewport.isScrollable = true
 
-        // on below line we are setting scalable.
-        lineGraphView.viewport.isScalable = true
-
-        // on below line we are setting scalable y
-        lineGraphView.viewport.setScalableY(true)
-
-        // on below line we are setting scrollable y
-        lineGraphView.viewport.setScrollableY(true)
-
-        // on below line we are setting color for series.
         series.color = R.color.purple_200
-
-        // on below line we are adding
-        // data series to our graph view.
+        series.setDrawDataPoints(true)
         lineGraphView.addSeries(series)
 
+        Log.d("Points:", dataPoints.toString())
+    }
 
 
-        lineGraphView1 = findViewById(R.id.idGraphView2)
-        // on below line we are adding data to our graph view.
+    fun retrievefromDBH() {
+        historyViewModel.historyAsc.observe(this, { history ->
+            history?.let { data ->
+                val dataPoints = mutableListOf<DataPoint>()
 
-        val series1: LineGraphSeries<DataPoint> = LineGraphSeries(
-            arrayOf(
+                data.forEach { dt ->
+                    dataPoints.add(
+                        DataPoint(
+                            dt.date_time_measure.toEpochSecond(ZoneOffset.UTC).toDouble(),
+                            dt.humidity.toDouble()
+                        )
+                    )
+                }
 
-                DataPoint(0.0, 1.0),
-                DataPoint(1.0, 3.0),
-                DataPoint(2.0, 4.0),
-                DataPoint(3.0, 9.0),
-                DataPoint(4.0, 6.0),
-                DataPoint(5.0, 3.0),
-                DataPoint(6.0, 6.0),
-                DataPoint(7.0, 1.0),
-                DataPoint(8.0, 2.0)
-            )
-        )
+                updateGraphHumidity(dataPoints)
+            }
+        })
+    }
 
-        // on below line adding animation
+    private fun updateGraphHumidity(dataPoints: List<DataPoint>) {
+
+        val series: LineGraphSeries<DataPoint> = LineGraphSeries(dataPoints.toTypedArray())
+
         lineGraphView1.animate()
 
-        // on below line we are setting scrollable
-        // for point graph view
-        lineGraphView1.viewport.isScrollable = true
+        series.color = R.color.purple_200
+        series.isDrawDataPoints = true
+        lineGraphView1.addSeries(series)
 
-        // on below line we are setting scalable.
-        lineGraphView1.viewport.isScalable = true
-
-        // on below line we are setting scalable y
-        lineGraphView1.viewport.setScalableY(true)
-
-        // on below line we are setting scrollable y
-        lineGraphView1.viewport.setScrollableY(true)
-
-        // on below line we are setting color for series.
-        series1.color = R.color.purple_200
-
-        // on below line we are adding
-        // data series to our graph view.
-        lineGraphView1.addSeries(series1)
-
+        Log.d("Points:", dataPoints.toString())
     }
 
-    fun retrievefromDB(): Array<DataPoint> {
-        val dataPoints = mutableListOf<DataPoint>()
-        historyViewModel.historyAsc.observe(this) { history ->
-            history.let { data ->
-                data.forEach { dt ->
-                    dataPoints.add(DataPoint(dt.date_time_measure.toEpochSecond(ZoneOffset.UTC).toDouble(),dt.temperature.toDouble()))
-                }
-            }
-        }
-        return dataPoints.toTypedArray()
-    }
+
 }
