@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
 import java.time.ZoneOffset
 
 class DashboardActivity : AppCompatActivity() {
@@ -40,22 +41,23 @@ class DashboardActivity : AppCompatActivity() {
 
 
     fun retrievefromDB() {
-        historyViewModel.historyAsc.observe(this, { history ->
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
+        historyViewModel.historyPerDay.observe(this) { history ->
             history?.let { data ->
                 val dataPoints = mutableListOf<DataPoint>()
 
                 data.forEach { dt ->
                     dataPoints.add(
                         DataPoint(
-                            dt.date_time_measure.toEpochSecond(ZoneOffset.UTC).toDouble(),
-                            dt.temperature.toDouble()
+                            dateFormatter.parse(dt.date),
+                            dt.avgTemperature.toDouble()
                         )
                     )
                 }
 
                 updateGraph(dataPoints)
             }
-        })
+        }
     }
 
     private fun updateGraph(dataPoints: List<DataPoint>) {
@@ -76,22 +78,23 @@ class DashboardActivity : AppCompatActivity() {
 
 
     fun retrievefromDBH() {
-        historyViewModel.historyAsc.observe(this, { history ->
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
+        historyViewModel.historyPerDay.observe(this) { history ->
             history?.let { data ->
                 val dataPoints = mutableListOf<DataPoint>()
 
                 data.forEach { dt ->
                     dataPoints.add(
                         DataPoint(
-                            dt.date_time_measure.toEpochSecond(ZoneOffset.UTC).toDouble(),
-                            dt.humidity.toDouble()
+                            dateFormatter.parse(dt.date),
+                            dt.avgHumidity.toDouble()
                         )
                     )
                 }
 
                 updateGraphHumidity(dataPoints)
             }
-        })
+        }
     }
 
     private fun updateGraphHumidity(dataPoints: List<DataPoint>) {
