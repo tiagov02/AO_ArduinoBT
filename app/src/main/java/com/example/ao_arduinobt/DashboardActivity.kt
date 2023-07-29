@@ -5,9 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.lifecycleScope
 import com.example.ao_arduinobt.RoomDB.HistoryAplication
 import com.example.ao_arduinobt.RoomDB.HistoryViewModel
 import com.example.ao_arduinobt.RoomDB.HistoryViewModelFactory
@@ -15,17 +12,11 @@ import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
-import java.time.ZoneOffset
-import java.util.*
 
 class DashboardActivity : AppCompatActivity() {
-    lateinit var lineGraphView: GraphView
-    lateinit var lineGraphView1: GraphView
+    lateinit var lineGraphViewTime: GraphView
+    lateinit var lineGraphViewHourly: GraphView
 
     val historyViewModel: HistoryViewModel by viewModels {
         HistoryViewModelFactory((application as HistoryAplication).repository)
@@ -40,8 +31,8 @@ class DashboardActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dashboard)
 
-        lineGraphView = findViewById(R.id.idGraphView)
-        lineGraphView1 = findViewById(R.id.idGraphView2)
+        lineGraphViewTime = findViewById(R.id.idGraphView)
+        lineGraphViewHourly = findViewById(R.id.idGraphView2)
 
 
         retrievefromDBPerDay()
@@ -78,11 +69,11 @@ class DashboardActivity : AppCompatActivity() {
         val seriesHum: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsHum.toTypedArray())
         val dtFormatter = SimpleDateFormat("dd/MM/yyyy")
 
-        lineGraphView.animate()
+        lineGraphViewTime.animate()
 
-        lineGraphView.viewport.isScalable = true
+        lineGraphViewTime.viewport.isScalable = true
 
-        lineGraphView.viewport.isScrollable = true
+        lineGraphViewTime.viewport.isScrollable = true
 
         seriesTemp.color = R.color.purple_200
         seriesTemp.setDrawDataPoints(true)
@@ -104,9 +95,9 @@ class DashboardActivity : AppCompatActivity() {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
 
-        lineGraphView.addSeries(seriesTemp)
-        lineGraphView.addSeries(seriesHum)
-        lineGraphView.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(this)
+        lineGraphViewTime.addSeries(seriesTemp)
+        lineGraphViewTime.addSeries(seriesHum)
+        lineGraphViewTime.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(this)
 
 
         Log.d("Points:", dataPointsTemp.toString())
