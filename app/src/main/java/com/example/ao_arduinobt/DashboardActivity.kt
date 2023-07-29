@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import com.example.ao_arduinobt.RoomDB.HistoryAplication
 import com.example.ao_arduinobt.RoomDB.HistoryViewModel
@@ -71,10 +73,11 @@ class DashboardActivity : AppCompatActivity() {
 
 
     private fun updateGraphPerDay() {
-
+        historyViewModel.historyPerDay.removeObservers(this)
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTemp.toTypedArray())
         val seriesHum: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsHum.toTypedArray())
         val dtFormatter = SimpleDateFormat("dd/MM/yyyy")
+
         lineGraphView.animate()
 
         lineGraphView.viewport.isScalable = true
@@ -124,6 +127,5 @@ class DashboardActivity : AppCompatActivity() {
 
         Log.d("Points:", dataPoints.toString())
     }*/
-
 
 }
