@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.core.content.ContextCompat
 import com.example.ao_arduinobt.RoomDB.HistoryAplication
 import com.example.ao_arduinobt.RoomDB.HistoryViewModel
 import com.example.ao_arduinobt.RoomDB.HistoryViewModelFactory
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
+import com.jjoe64.graphview.LegendRenderer
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
@@ -40,6 +42,10 @@ class DashboardActivity : AppCompatActivity() {
 
         lineGraphViewTime = findViewById(R.id.idGraphView)
         lineGraphViewHourly = findViewById(R.id.idGraphView2)
+
+        lineGraphViewTime.title = "Humidity and Temperature per Data(Average)"
+        lineGraphViewHourly.title = "Humidity and Temperature per Hour(Average)"
+
 
 
         retrievefromDBPerDay()
@@ -96,10 +102,12 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun updateGraphPerDay() {
         historyViewModel.historyPerDay.removeObservers(this)
-        lineGraphViewTime.removeAllSeries()
+
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTempDaily.toTypedArray())
         val seriesHum: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsHumDaily.toTypedArray())
-        val dtFormatter = SimpleDateFormat("dd/MM/yyyy")
+        val dtFormatter = SimpleDateFormat("dd-MM-yy")
+        seriesHum.title ="Humidity"
+        seriesTemp.title= "Temperature"
 
         lineGraphViewTime.animate()
 
@@ -113,7 +121,7 @@ class DashboardActivity : AppCompatActivity() {
         seriesTemp.setOnDataPointTapListener { series, dataPoint ->
             val xValue = dataPoint.x.toFloat()
             val yValue = dataPoint.y
-            val message = "Data: ${dtFormatter.format(xValue)}\nValor: ${yValue.toString()}"
+            val message = "Date: ${dtFormatter.format(xValue)}\nTemperature: ${yValue.toString()}"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
 
@@ -123,13 +131,38 @@ class DashboardActivity : AppCompatActivity() {
         seriesHum.setOnDataPointTapListener { series, dataPoint ->
             val xValue = dataPoint.x.toFloat()
             val yValue = dataPoint.y
-            val message = "Data: ${dtFormatter.format(xValue)}\nValor: ${yValue.toString()}"
+            val message = "Date: ${dtFormatter.format(xValue)}\nHumidity: ${yValue.toString()}"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
 
         lineGraphViewTime.addSeries(seriesTemp)
         lineGraphViewTime.addSeries(seriesHum)
-        lineGraphViewTime.gridLabelRenderer.labelFormatter = DateAsXAxisLabelFormatter(this)
+
+        val customLabelFormatter = object : DefaultLabelFormatter() {
+            private var previousDate: String? = null
+
+            override fun formatLabel(value: Double, isValueX: Boolean): String {
+                return if (isValueX) {
+                    val dateString = dtFormatter.format(value)
+                    if (dateString == previousDate) {
+                        "" // Retornar uma string vazia para evitar repetições
+                    } else {
+                        previousDate = dateString
+                        dateString
+                    }
+                } else {
+                    super.formatLabel(value, isValueX)
+                }
+            }
+        }
+        lineGraphViewTime.gridLabelRenderer.labelFormatter = customLabelFormatter
+
+        lineGraphViewTime.legendRenderer.isVisible = true
+        lineGraphViewTime.legendRenderer.align = LegendRenderer.LegendAlign.TOP
+        lineGraphViewTime.viewport.isXAxisBoundsManual = true
+
+        lineGraphViewTime.viewport.setMinX(lineGraphViewTime.viewport.getMinX(true))
+        lineGraphViewTime.viewport.setMaxX(lineGraphViewTime.viewport.getMaxX(true))
 
 
         Log.d("Points:", dataPointsTempDaily.toString())
@@ -141,6 +174,8 @@ class DashboardActivity : AppCompatActivity() {
         lineGraphViewHourly.removeAllSeries()
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTempHour.toTypedArray())
         val seriesHum: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsHumHour.toTypedArray())
+        seriesHum.title ="Humidity"
+        seriesTemp.title= "Temperature"
 
         lineGraphViewHourly.animate()
         lineGraphViewHourly.viewport.isScalable = true;
@@ -154,7 +189,7 @@ class DashboardActivity : AppCompatActivity() {
             val xValue = dataPoint.x.toFloat()
             val yValue = dataPoint.y
             val localTime = LocalTime.ofSecondOfDay(xValue.toLong())
-            val message = "Data: ${localTime.format(dateFormatter)}\nValor: ${yValue.toString()}"
+            val message = "Hour: ${localTime.format(dateFormatter)}\nTemperature: ${yValue.toString()}"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
 
@@ -165,7 +200,7 @@ class DashboardActivity : AppCompatActivity() {
             val xValue = dataPoint.x.toFloat()
             val yValue = dataPoint.y
             val localTime = LocalTime.ofSecondOfDay(xValue.toLong())
-            val message = "Data: ${localTime.format(dateFormatter)}\nValor: ${yValue.toString()}"
+            val message = "Hour: ${localTime.format(dateFormatter)}\nHumidity: ${yValue.toString()}"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
         lineGraphViewHourly.addSeries(seriesTemp)
@@ -183,12 +218,13 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         lineGraphViewHourly.gridLabelRenderer.labelFormatter = labelsFormatter
+        lineGraphViewHourly.legendRenderer.isVisible = true
+        lineGraphViewHourly.legendRenderer.align = LegendRenderer.LegendAlign.TOP
 
-        // Definir os rótulos do eixo X em intervalos fixos (opcional)
         lineGraphViewHourly.viewport.isXAxisBoundsManual = true
 
-        // Redesenhar o gráfico
-        lineGraphViewHourly.onDataChanged(false, false)
+        lineGraphViewHourly.viewport.setMinX(lineGraphViewHourly.viewport.getMinX(true))
+        lineGraphViewHourly.viewport.setMaxX(lineGraphViewHourly.viewport.getMaxX(true))
 
         Log.d("Points:", dataPointsHumHour.toString())
     }

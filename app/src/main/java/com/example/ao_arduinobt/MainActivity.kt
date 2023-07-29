@@ -115,7 +115,6 @@ class MainActivity : AppCompatActivity() {
             btConn.isEnabled = true
             btConn.setOnClickListener {
                 connectToHC06()
-                Toast.makeText(this,"Sucessfully connected! Receiving Data!!",Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -154,12 +153,12 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this,"Device HC-06 not founded in paired devices please pair them!",Toast.LENGTH_SHORT).show()
             }
         } else {
-            // If Connected Receive Data
             startReceivingData()
         }
     }
 
     private fun startReceivingData() {
+        Toast.makeText(this,"Sucessfully connected! Receiving Data!!",Toast.LENGTH_SHORT).show()
         Observable.create<ByteArray> { emitter ->
             val buffer = ByteArray(1024)
             var hasDataStarted = false
