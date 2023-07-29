@@ -56,8 +56,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         checkPermissions()
 
-        //historyViewModel.insert(History(19f,0.5f, LocalDateTime.now()))
-
         MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
 
         bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
@@ -104,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             val btConn = findViewById<Button>(R.id.connectToDevice)
             btDevices.text = ""
             val pairedDevices: Set<BluetoothDevice>? = bluetoothAdapter?.bondedDevices
-            //verifica e pesquisa dispositivos
+            //verify devices
             pairedDevices?.forEach { device ->
                 val deviceName = device.name
                 val deviceHardwareAddress = device.address
