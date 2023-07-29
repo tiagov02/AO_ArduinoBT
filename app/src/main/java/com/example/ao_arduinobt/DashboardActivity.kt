@@ -145,7 +145,7 @@ class DashboardActivity : AppCompatActivity() {
                 return if (isValueX) {
                     val dateString = dtFormatter.format(value)
                     if (dateString == previousDate) {
-                        "" // Retornar uma string vazia para evitar repetições
+                        "" // Return empty string to avoid errors
                     } else {
                         previousDate = dateString
                         dateString
