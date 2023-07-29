@@ -137,7 +137,7 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun updateGraphPerHour() {
         val dateFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
-        //historyViewModel.historyPerHour.removeObservers(this)
+        historyViewModel.historyPerHour.removeObservers(this)
         lineGraphViewHourly.removeAllSeries()
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTempHour.toTypedArray())
         val seriesHum: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsHumHour.toTypedArray())

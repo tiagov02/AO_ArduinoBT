@@ -114,8 +114,8 @@ class MainActivity : AppCompatActivity() {
             }
             btConn.isEnabled = true
             btConn.setOnClickListener {
-                Toast.makeText(this,"Sucessfully connected! Receiving Data!!",Toast.LENGTH_SHORT).show()
                 connectToHC06()
+                Toast.makeText(this,"Sucessfully connected! Receiving Data!!",Toast.LENGTH_SHORT).show()
             }
         }
     }
