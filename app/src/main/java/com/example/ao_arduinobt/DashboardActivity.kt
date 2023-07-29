@@ -77,13 +77,13 @@ class DashboardActivity : AppCompatActivity() {
                 data.forEach { dt ->
                     dataPointsTempHour.add(
                         DataPoint(
-                            LocalTime.parse(dt.hour, dateFormatter).toSecondOfDay() * 1000.toLong().toDouble(),
+                            LocalTime.parse(dt.hour, dateFormatter).toSecondOfDay().toLong().toDouble(),
                             dt.avgTemperature.toDouble()
                         )
                     )
                     dataPointsHumHour.add(
                         DataPoint(
-                            LocalTime.parse(dt.hour, dateFormatter).toSecondOfDay() * 1000.toLong().toDouble(),
+                            LocalTime.parse(dt.hour, dateFormatter).toSecondOfDay().toLong().toDouble(),
                             dt.avgHumidity.toDouble() * 100
                         )
                     )
@@ -96,6 +96,7 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun updateGraphPerDay() {
         historyViewModel.historyPerDay.removeObservers(this)
+        lineGraphViewTime.removeAllSeries()
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTempDaily.toTypedArray())
         val seriesHum: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsHumDaily.toTypedArray())
         val dtFormatter = SimpleDateFormat("dd/MM/yyyy")
@@ -136,7 +137,8 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun updateGraphPerHour() {
         val dateFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
-        historyViewModel.historyPerHour.removeObservers(this)
+        //historyViewModel.historyPerHour.removeObservers(this)
+        lineGraphViewHourly.removeAllSeries()
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTempHour.toTypedArray())
         val seriesHum: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsHumHour.toTypedArray())
 
@@ -151,7 +153,8 @@ class DashboardActivity : AppCompatActivity() {
         seriesTemp.setOnDataPointTapListener { series, dataPoint ->
             val xValue = dataPoint.x.toFloat()
             val yValue = dataPoint.y
-            val message = "Data: ${xValue}\nValor: ${yValue.toString()}"
+            val localTime = LocalTime.ofSecondOfDay(xValue.toLong())
+            val message = "Data: ${localTime.format(dateFormatter)}\nValor: ${yValue.toString()}"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
 
@@ -161,7 +164,8 @@ class DashboardActivity : AppCompatActivity() {
         seriesHum.setOnDataPointTapListener { series, dataPoint ->
             val xValue = dataPoint.x.toFloat()
             val yValue = dataPoint.y
-            val message = "Data: ${xValue}\nValor: ${yValue.toString()}"
+            val localTime = LocalTime.ofSecondOfDay(xValue.toLong())
+            val message = "Data: ${localTime.format(dateFormatter)}\nValor: ${yValue.toString()}"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
         lineGraphViewHourly.addSeries(seriesTemp)
@@ -170,7 +174,7 @@ class DashboardActivity : AppCompatActivity() {
         val labelsFormatter = object : DefaultLabelFormatter() {
             override fun formatLabel(value: Double, isValueX: Boolean): String {
                 return if (isValueX) {
-                    val localTime = LocalTime.ofSecondOfDay((value / 1000).toLong())
+                    val localTime = LocalTime.ofSecondOfDay(value.toLong())
                     localTime.format(dateFormatter)
                 } else {
                     super.formatLabel(value, isValueX)
