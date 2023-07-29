@@ -77,13 +77,13 @@ class DashboardActivity : AppCompatActivity() {
                 data.forEach { dt ->
                     dataPointsTempHour.add(
                         DataPoint(
-                            (LocalTime.parse(dt.hour, dateFormatter).toNanoOfDay() / 1_000_000).toDouble(),
+                            LocalTime.parse(dt.hour, dateFormatter).toSecondOfDay() * 1000.toLong().toDouble(),
                             dt.avgTemperature.toDouble()
                         )
                     )
                     dataPointsHumHour.add(
                         DataPoint(
-                            (LocalTime.parse(dt.hour, dateFormatter).toNanoOfDay() / 1_000_000).toDouble(),
+                            LocalTime.parse(dt.hour, dateFormatter).toSecondOfDay() * 1000.toLong().toDouble(),
                             dt.avgHumidity.toDouble() * 100
                         )
                     )
@@ -136,7 +136,7 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun updateGraphPerHour() {
         val dateFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
-        historyViewModel.historyPerDay.removeObservers(this)
+        historyViewModel.historyPerHour.removeObservers(this)
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTempHour.toTypedArray())
         val seriesHum: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsHumHour.toTypedArray())
 
@@ -170,7 +170,7 @@ class DashboardActivity : AppCompatActivity() {
         val labelsFormatter = object : DefaultLabelFormatter() {
             override fun formatLabel(value: Double, isValueX: Boolean): String {
                 return if (isValueX) {
-                    val localTime = LocalTime.ofNanoOfDay((value * 1_000_000).toLong())
+                    val localTime = LocalTime.ofSecondOfDay((value / 1000).toLong())
                     localTime.format(dateFormatter)
                 } else {
                     super.formatLabel(value, isValueX)
@@ -179,6 +179,12 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         lineGraphViewHourly.gridLabelRenderer.labelFormatter = labelsFormatter
+
+        // Definir os rótulos do eixo X em intervalos fixos (opcional)
+        lineGraphViewHourly.viewport.isXAxisBoundsManual = true
+
+        // Redesenhar o gráfico
+        lineGraphViewHourly.onDataChanged(false, false)
 
         Log.d("Points:", dataPointsHumHour.toString())
     }
