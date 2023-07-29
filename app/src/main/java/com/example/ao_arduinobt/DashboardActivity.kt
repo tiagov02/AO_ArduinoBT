@@ -5,14 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import com.example.ao_arduinobt.RoomDB.HistoryAplication
 import com.example.ao_arduinobt.RoomDB.HistoryViewModel
 import com.example.ao_arduinobt.RoomDB.HistoryViewModelFactory
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.LegendRenderer
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter
+import com.jjoe64.graphview.helper.StaticLabelsFormatter
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import java.text.SimpleDateFormat
@@ -53,6 +52,7 @@ class DashboardActivity : AppCompatActivity() {
     }
 
 
+    //Add the points
     fun retrievefromDBPerDay() {
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
         historyViewModel.historyPerDay.observe(this) { history ->
@@ -98,14 +98,24 @@ class DashboardActivity : AppCompatActivity() {
             }
         }
     }
-
+//
 
     private fun updateGraphPerDay() {
         historyViewModel.historyPerDay.removeObservers(this)
+        lineGraphViewTime.removeAllSeries()
+        val dtFormatter = SimpleDateFormat("dd-MM-yy")
 
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTempDaily.toTypedArray())
         val seriesHum: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsHumDaily.toTypedArray())
-        val dtFormatter = SimpleDateFormat("dd-MM-yy")
+        //format the data
+        val xValues = dataPointsTempDaily.mapIndexed { index, _ -> index.toDouble() }
+        val xLabels = dataPointsTempDaily.map { dtFormatter.format(it.x) }.toTypedArray()
+
+        // Points with converted Dates
+        seriesTemp.resetData(xValues.zip(dataPointsTempDaily).map { DataPoint(it.first, it.second.y) }.toTypedArray())
+        seriesHum.resetData(xValues.zip(dataPointsHumDaily).map { DataPoint(it.first, it.second.y) }.toTypedArray())
+
+        //define the title
         seriesHum.title ="Humidity"
         seriesTemp.title= "Temperature"
 
@@ -119,9 +129,10 @@ class DashboardActivity : AppCompatActivity() {
         seriesTemp.setDrawDataPoints(true)
 
         seriesTemp.setOnDataPointTapListener { series, dataPoint ->
-            val xValue = dataPoint.x.toFloat()
+            val xValue = dataPoint.x.toInt()
             val yValue = dataPoint.y
-            val message = "Date: ${dtFormatter.format(xValue)}\nTemperature: ${yValue.toString()}"
+            val dateString = xLabels[xValue]
+            val message = "Date: $dateString\nHumidity: ${yValue.toString()}"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
 
@@ -129,38 +140,29 @@ class DashboardActivity : AppCompatActivity() {
         seriesHum.setDrawDataPoints(true)
 
         seriesHum.setOnDataPointTapListener { series, dataPoint ->
-            val xValue = dataPoint.x.toFloat()
+            val xValue = dataPoint.x.toInt()
             val yValue = dataPoint.y
-            val message = "Date: ${dtFormatter.format(xValue)}\nHumidity: ${yValue.toString()}"
+            val dateString = xLabels[xValue]
+            val message = "Date: $dateString\nHumidity: ${yValue.toString()}"
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
 
+        //add the series to teh graph
         lineGraphViewTime.addSeries(seriesTemp)
         lineGraphViewTime.addSeries(seriesHum)
 
-        val customLabelFormatter = object : DefaultLabelFormatter() {
-            private var previousDate: String? = null
+        //format the labels
+        val customLabelFormatter = StaticLabelsFormatter(lineGraphViewTime)
 
-            override fun formatLabel(value: Double, isValueX: Boolean): String {
-                return if (isValueX) {
-                    val dateString = dtFormatter.format(value)
-                    if (dateString == previousDate) {
-                        "" // Return empty string to avoid errors
-                    } else {
-                        previousDate = dateString
-                        dateString
-                    }
-                } else {
-                    super.formatLabel(value, isValueX)
-                }
-            }
-        }
+        customLabelFormatter.setHorizontalLabels(xLabels)
         lineGraphViewTime.gridLabelRenderer.labelFormatter = customLabelFormatter
 
+        //enable legend
         lineGraphViewTime.legendRenderer.isVisible = true
         lineGraphViewTime.legendRenderer.align = LegendRenderer.LegendAlign.TOP
         lineGraphViewTime.viewport.isXAxisBoundsManual = true
 
+        //set the view port
         lineGraphViewTime.viewport.setMinX(lineGraphViewTime.viewport.getMinX(true))
         lineGraphViewTime.viewport.setMaxX(lineGraphViewTime.viewport.getMaxX(true))
 

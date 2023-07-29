@@ -158,6 +158,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startReceivingData() {
+        //Create the observer and open the socket for bluetooth
         Toast.makeText(this,"Sucessfully connected! Receiving Data!!",Toast.LENGTH_SHORT).show()
         Observable.create<ByteArray> { emitter ->
             val buffer = ByteArray(1024)
@@ -194,6 +195,7 @@ class MainActivity : AppCompatActivity() {
 
     //This function will pass the data to a Room Database
     fun handleData(data: ByteArray){
+        //treat the data
         val receivedString = String(data, charset("UTF-8"))
         Log.d("TAG", "Dados recebidos: $receivedString")
 
@@ -206,6 +208,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun sendDataToDB(data: String){
+        //sed the data to a room database
         data.split("\n").forEach{string ->
             if(string.isNotBlank()){
                 val spl_individual = string.split(";")
