@@ -27,11 +27,11 @@ class DashboardActivity : AppCompatActivity() {
         HistoryViewModelFactory((application as HistoryAplication).repository)
     }
 
-    private val dataPointsTempDaily = mutableListOf<DataPoint>()
-    private val dataPointsHumDaily = mutableListOf<DataPoint>()
+    private var dataPointsTempDaily = mutableListOf<DataPoint>()
+    private var dataPointsHumDaily = mutableListOf<DataPoint>()
 
-    private val dataPointsTempHour = mutableListOf<DataPoint>()
-    private val dataPointsHumHour = mutableListOf<DataPoint>()
+    private var dataPointsTempHour = mutableListOf<DataPoint>()
+    private var dataPointsHumHour = mutableListOf<DataPoint>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,6 +56,9 @@ class DashboardActivity : AppCompatActivity() {
     fun retrievefromDBPerDay() {
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
         historyViewModel.historyPerDay.observe(this) { history ->
+            dataPointsTempDaily = mutableListOf()
+            dataPointsHumDaily = mutableListOf()
+
             history?.let { data ->
                 data.forEach { dt ->
                     dataPointsTempDaily.add(
@@ -79,6 +82,8 @@ class DashboardActivity : AppCompatActivity() {
     fun retrievefromDBPerHour() {
         val dateFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
         historyViewModel.historyPerHour.observe(this) { history ->
+            dataPointsTempHour = mutableListOf()
+            dataPointsHumHour = mutableListOf()
             history?.let { data ->
                 data.forEach { dt ->
                     dataPointsTempHour.add(
@@ -101,7 +106,7 @@ class DashboardActivity : AppCompatActivity() {
 //
 
     private fun updateGraphPerDay() {
-        historyViewModel.historyPerDay.removeObservers(this)
+        //historyViewModel.historyPerDay.removeObservers(this)
         lineGraphViewTime.removeAllSeries()
         val dtFormatter = SimpleDateFormat("dd-MM-yy")
 
@@ -172,7 +177,7 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun updateGraphPerHour() {
         val dateFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
-        historyViewModel.historyPerHour.removeObservers(this)
+        //historyViewModel.historyPerHour.removeObservers(this)
         lineGraphViewHourly.removeAllSeries()
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTempHour.toTypedArray())
         val seriesHum: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsHumHour.toTypedArray())
