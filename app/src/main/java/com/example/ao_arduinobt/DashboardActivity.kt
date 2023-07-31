@@ -114,7 +114,7 @@ class DashboardActivity : AppCompatActivity() {
         //format the data
         val xValues = dataPointsTempDaily.mapIndexed { index, _ -> index.toDouble() }
         val xLabels = dataPointsTempDaily.map { dtFormatter.format(it.x) }.toTypedArray()
-        val labelsToShow = if (xLabels.size < 2) arrayOf("", xLabels[0]) else xLabels
+        val labelsToShow = if (xLabels.size < 2) arrayOf( xLabels[0],"") else xLabels
 
         // Points with converted Dates
         seriesTemp.resetData(xValues.zip(dataPointsTempDaily).map { DataPoint(it.first, it.second.y) }.toTypedArray())
