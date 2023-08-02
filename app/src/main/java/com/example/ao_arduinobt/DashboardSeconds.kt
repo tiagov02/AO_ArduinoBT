@@ -39,40 +39,42 @@ class DashboardSeconds : AppCompatActivity() {
     }
 
     fun retrievefromDBPerHourMinuteSecond() {
-        var lastAddedSecond: LocalTime? = null
+        var lastAddedTime: LocalTime? = null
         val dateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.getDefault())
         historyViewModel.historyPerHourMinuteSecond.observe(this) { history ->
             dataPointsTemp = mutableListOf()
             dataPointsHum = mutableListOf()
             history?.let { data ->
                 data.forEach { dt ->
-                    if(lastAddedSecond == null){
+                    if(lastAddedTime == null){
+                        val time = LocalTime.parse(dt.hour, dateFormatter)
+                        lastAddedTime = time
                         dataPointsTemp.add(
                             DataPoint(
-                                LocalTime.parse(dt.hour, dateFormatter).toSecondOfDay().toLong().toDouble(),
+                                time.toSecondOfDay().toLong().toDouble(),
                                 dt.avgTemperature.toDouble()
                             )
                         )
                         dataPointsHum.add(
                             DataPoint(
-                                LocalTime.parse(dt.hour, dateFormatter).toSecondOfDay().toLong().toDouble(),
+                                time.toSecondOfDay().toLong().toDouble(),
                                 dt.avgHumidity.toDouble() * 100
                             )
                         )
                     }
                     else{
-                        val date = LocalTime.parse(dt.hour,dateFormatter)
-                        if(isDifferenceBiggerThen30Seconds(lastAddedSecond!!, date)){
-                            lastAddedSecond = date
+                        val time = LocalTime.parse(dt.hour,dateFormatter)
+                        if(isDifferenceBiggerThen30Seconds(lastAddedTime!!, time)){
+                            lastAddedTime = time
                             dataPointsTemp.add(
                                 DataPoint(
-                                    date.toSecondOfDay().toLong().toDouble(),
+                                    time.toSecondOfDay().toLong().toDouble(),
                                     dt.avgTemperature.toDouble()
                                 )
                             )
                             dataPointsHum.add(
                                 DataPoint(
-                                    date.toSecondOfDay().toLong().toDouble(),
+                                    time.toSecondOfDay().toLong().toDouble(),
                                     dt.avgHumidity.toDouble() * 100
                                 )
                             )
