@@ -80,7 +80,7 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     fun retrievefromDBPerHour() {
-        val dateFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
+        val dateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.getDefault())
         historyViewModel.historyPerHour.observe(this) { history ->
             dataPointsTempHour = mutableListOf()
             dataPointsHumHour = mutableListOf()
