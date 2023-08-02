@@ -3,6 +3,7 @@ package com.example.ao_arduinobt
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import com.example.ao_arduinobt.RoomDB.HistoryAplication
@@ -49,6 +50,11 @@ class DashboardActivity : AppCompatActivity() {
 
         retrievefromDBPerDay()
         retrievefromDBPerHour()
+
+        findViewById<View>(R.id.fab_update).setOnClickListener {
+            retrievefromDBPerHour()
+            retrievefromDBPerDay()
+        }
     }
 
 
@@ -106,6 +112,7 @@ class DashboardActivity : AppCompatActivity() {
 //
 
     private fun updateGraphPerDay() {
+        historyViewModel.historyPerDay.removeObservers(this)
         lineGraphViewTime.removeAllSeries()
         val dtFormatter = SimpleDateFormat("dd-MM-yy")
 
@@ -175,6 +182,7 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     private fun updateGraphPerHour() {
+        historyViewModel.historyPerHour.removeObservers(this)
         val dateFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
         lineGraphViewHourly.removeAllSeries()
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTempHour.toTypedArray())

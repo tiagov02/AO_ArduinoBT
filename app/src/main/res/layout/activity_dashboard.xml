@@ -39,4 +39,13 @@
         android:layout_marginTop="50dp"
         android:layout_marginBottom="100dp" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/ic_action_update"
+        android:contentDescription="Update"
+        android:layout_margin="16dp" />
+
 </RelativeLayout>
