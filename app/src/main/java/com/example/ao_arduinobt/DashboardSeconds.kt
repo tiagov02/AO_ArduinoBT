@@ -90,7 +90,7 @@ class DashboardSeconds : AppCompatActivity() {
     }
 
     private fun updateGraphPerHourMinuteSecond() {
-        historyViewModel.historyPerHour.removeObservers(this)
+        historyViewModel.historyPerHourMinuteSecond.removeObservers(this)
         val dateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.getDefault())
         lineGraphView.removeAllSeries()
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTemp.toTypedArray())
