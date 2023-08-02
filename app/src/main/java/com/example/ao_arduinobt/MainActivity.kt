@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         private const val REQUEST_ENABLE_BT = 1
         private const val SHOW_ALL_REQUEST_CODE = 2
         private const val SHOW_GRAPHS_REQUEST_CODE = 3
+        private const val SHOW_GRAPH_SECONDS = 4
     }
 
     private lateinit var MY_UUID :UUID
@@ -83,6 +84,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.ViewGraphs).setOnClickListener {
             val intent = Intent(this@MainActivity,DashboardActivity::class.java)
             startActivityForResult(intent, SHOW_GRAPHS_REQUEST_CODE)
+        }
+        findViewById<Button>(R.id.ViewGraphPerSecond).setOnClickListener {
+            val intent = Intent(this@MainActivity, DashboardSeconds::class.java)
+            startActivityForResult(intent, SHOW_GRAPH_SECONDS)
         }
     }
 

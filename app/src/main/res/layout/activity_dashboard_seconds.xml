@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?><!--on below line we are creating a swipe to refresh layout-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <!--text view for displaying heading-->
+    <TextView
+        android:id="@+id/idTVHead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:padding="4dp"
+        android:text="DASHBOARD"
+        android:textAlignment="center"
+        android:textColor="@color/purple_200"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!--line graph view where we will
+        be displaying our data-->
+
+    <com.jjoe64.graphview.GraphView
+        android:id="@+id/graph_30_seconds"
+        android:layout_below="@id/idTVHead"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="50dp" />
+
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@drawable/ic_action_update"
+        android:contentDescription="Update"
+        android:layout_margin="16dp" />
+
+</RelativeLayout>

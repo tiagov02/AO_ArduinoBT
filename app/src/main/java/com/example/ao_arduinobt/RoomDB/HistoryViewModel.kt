@@ -12,6 +12,7 @@ class HistoryViewModel(private val repository: HistoryRepository) : ViewModel() 
     val allHistory: LiveData<List<History>> = repository.history.asLiveData()
     val historyPerDay: LiveData<List<DailyHistory>> = repository.historyPerDay.asLiveData()
     val historyPerHour: LiveData<List<HourlyHistory>> = repository.historyPerHour.asLiveData()
+    val historyPerHourMinuteSecond : LiveData<List<HourlyHistory>> = repository.historyPerHourMinuteSeconds.asLiveData()
 
     /**
      * Launching a new coroutine to insert the data in a non-blocking way

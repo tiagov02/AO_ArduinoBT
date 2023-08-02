@@ -86,7 +86,7 @@ class DashboardActivity : AppCompatActivity() {
     }
 
     fun retrievefromDBPerHour() {
-        val dateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.getDefault())
+        val dateFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
         historyViewModel.historyPerHour.observe(this) { history ->
             dataPointsTempHour = mutableListOf()
             dataPointsHumHour = mutableListOf()
@@ -183,7 +183,7 @@ class DashboardActivity : AppCompatActivity() {
 
     private fun updateGraphPerHour() {
         historyViewModel.historyPerHour.removeObservers(this)
-        val dateFormatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.getDefault())
+        val dateFormatter = DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
         lineGraphViewHourly.removeAllSeries()
         val seriesTemp: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsTempHour.toTypedArray())
         val seriesHum: LineGraphSeries<DataPoint> = LineGraphSeries(dataPointsHumHour.toTypedArray())

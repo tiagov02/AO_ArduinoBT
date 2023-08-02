@@ -59,8 +59,8 @@
         android:id="@+id/ViewData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="140dp"
-        android:layout_marginTop="452dp"
+        android:layout_marginStart="136dp"
+        android:layout_marginTop="408dp"
         android:text="   View Data   "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -70,9 +70,20 @@
         android:id="@+id/ViewGraphs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
-        android:layout_marginTop="548dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="500dp"
         android:text="     VIEW GRAPHS   "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/ViewGraphPerSecond"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="584dp"
+        android:text="     VIEW GRAPHS PER SECOND   "
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />

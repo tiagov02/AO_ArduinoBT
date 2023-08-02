@@ -10,6 +10,7 @@ class HistoryRepository(private val historyDAO: HistoryDAO) {
     val history: Flow<List<History>> = historyDAO.getHistoryOrdered()
     val historyPerDay: Flow<List<DailyHistory>> = historyDAO.getAverageHistoryPerDay()
     val historyPerHour: Flow<List<HourlyHistory>> = historyDAO.getAverageHistoryPerHour()
+    val historyPerHourMinuteSeconds : Flow<List<HourlyHistory>> = historyDAO.getAverageHistoryPerHourMinuteSecond()
 
     // By default Room runs suspend queries off the main thread, therefore, we don't need to
     // implement anything else to ensure we're not doing long running database work

@@ -19,11 +19,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AO_ArduinoBT"
         tools:targetApi="31">
-        <activity android:name=".ShowAllActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".DashboardSeconds"
+            android:exported="false" />
+        <activity
+            android:name=".ShowAllActivity"
+            android:exported="false" />
         <activity
             android:name=".DashboardActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -32,7 +36,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
+
 </manifest>
